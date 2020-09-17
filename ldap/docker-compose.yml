@@ -1,0 +1,75 @@
+version: '3'
+services:
+#  openldap:
+ #   image: osixia/openldap
+#    container_name: openldap_web
+#    command: --copy-service --loglevel debug
+#    ports:
+#      - "389:389"
+#    volumes:
+#      - ./bootstrapweb.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+#    environment:
+#      LDAP_ORGANISATION: taxco
+#      LDAP_ADMIN_PASSWORD: taxcoweb
+#      LDAP_DOMAIN: shihadeh.intern
+#      LDAP_BASE_DN: dc=shihadeh,dc=intern
+#      KEEP_EXISTING_CONFIG: "false"
+#      LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
+  openldap:
+    image: osixia/openldap
+    container_name: openldap_web
+    command: --copy-service --loglevel debug
+    ports:
+      - "389:389"
+    volumes:
+      - ./boostrapwebtaxco.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
+    environment:
+      LDAP_ORGANISATION: taxco
+      LDAP_ADMIN_PASSWORD: taxcoweb
+      LDAP_DOMAIN: webtaxco.com
+      LDAP_BASE_DN: dc=webtaxco,dc=com
+      KEEP_EXISTING_CONFIG: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
+    networks:
+      - web_authe
+  webAuthentication:
+    build:
+      context: /Users/Andres/Documents/spring/web-app-authentication
+      dockerfile: Dockerfile
+    image: web-authe:1.0.4
+    container_name: web-authentication
+    ports:
+      - '8091:8091'
+    networks:
+      - web_authe
+  databaseMongo:
+    image: mongo
+    container_name: mongodbWEb
+    ports:
+      - '27017:27017'
+    volumes:
+      - /Users/Andres/Documents/mondodata:/data/db
+    networks:
+      - web_authe
+  webTaxcoApp:
+    build:
+      context: /Users/Andres/Documents/spring/wep-taxco-app
+      dockerfile: Dockerfile
+    image: web-taxco-app:1.0.1
+    container_name: web-taxco-app
+    ports:
+      - '8090:8090'
+    networks:
+      - web_authe
+  webGateway:
+    build:
+      context: /Users/Andres/Documents/spring/web-app-gateway
+      dockerfile: Dockerfile
+    image: web-gateway:1.0.1
+    container_name: web-app-gateway
+    ports:
+      - '8099:8099'
+    networks:
+      - web_authe
+networks:
+  web_authe:

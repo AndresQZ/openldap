@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web-back:
+    build:
+      context: ../spring-projects/taxco-web-app-github/
+      dockerfile: Dockerfile
+    image: web-back:1.0.0
+    container_name: web-back
+    restart: always
+    ports:
+      - '8090:8080'
+  web-front:
+    build:
+      context: ../angular-apps/web-app-front/
+      dockerfile: Dockerfile
+    image: web-front:1.0.0
+    container_name: web-front
+    restart: always
+    ports:
+      - '4300:80'
