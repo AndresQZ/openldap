@@ -71,5 +71,15 @@ services:
       - '8099:8099'
     networks:
       - web_authe
+  webTaxcoEmail:
+    build:
+      context: /Users/Andres/Documents/spring/web-taxco-email
+      dockerfile: Dockerfile
+    image: web-taxco-email:1.0.0
+    container_name: web-taxco-email
+    ports:
+      - '8092:8092'
+    networks:
+      - web_authe
 networks:
   web_authe:
