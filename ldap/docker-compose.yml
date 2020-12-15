@@ -34,49 +34,49 @@ services:
       - web_authe
   webAuthentication:
     build:
-      context: /Users/Andres/Documents/spring/web-app-authentication
+      context: $webAuthenticationContext
       dockerfile: Dockerfile
-    image: web-authe:1.0.4
-    container_name: web-authentication
+    image: $webAuthenticationImage
+    container_name: $webAuthenticationContainer
     ports:
       - '8091:8091'
     networks:
       - web_authe
   databaseMongo:
-    image: mongo
-    container_name: mongodbWEb
+    image: $databaseMongoImage
+    container_name: $databaseMongoContainer
     ports:
       - '27017:27017'
     volumes:
-      - /Users/Andres/Documents/mondodata:/data/db
+      - $databaseMongoVolumen
     networks:
       - web_authe
   webTaxcoApp:
     build:
-      context: /Users/Andres/Documents/spring/wep-taxco-app
+      context: $webTaxcoAppContext
       dockerfile: Dockerfile
-    image: web-taxco-app:1.0.1
-    container_name: web-taxco-app
+    image: $webTaxcoAppImage
+    container_name: $webTaxcoAppContainer
     ports:
       - '8090:8090'
     networks:
       - web_authe
   webGateway:
     build:
-      context: /Users/Andres/Documents/spring/web-app-gateway
+      context: $webGatewayContext
       dockerfile: Dockerfile
-    image: web-gateway:1.0.1
-    container_name: web-app-gateway
+    image: $webGatewayImage
+    container_name: $webGatewayContainer
     ports:
       - '8099:8099'
     networks:
       - web_authe
   webTaxcoEmail:
     build:
-      context: /Users/Andres/Documents/spring/web-taxco-email
+      context: $webTaxcoEmailContext
       dockerfile: Dockerfile
-    image: web-taxco-email:1.0.0
-    container_name: web-taxco-email
+    image: $webTaxcoEmailImage
+    container_name: $webTaxcoEmailContainer
     ports:
       - '8092:8092'
     networks:
