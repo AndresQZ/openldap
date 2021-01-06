@@ -81,5 +81,16 @@ services:
       - '8092:8092'
     networks:
       - web_authe
+  web-front:
+    build:
+      context: $webTaxcoFrontContext
+      dockerfile: Dockerfile
+      args: [ "HOST_URL=http://187.227.238.91:8099"]
+    image: $webTaxcoFrontImage
+    environment:
+      host: $host
+    container_name: web-front
+    ports:
+      - '4300:80'
 networks:
   web_authe:
