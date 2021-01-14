@@ -57,6 +57,8 @@ services:
       dockerfile: Dockerfile
     image: $webTaxcoAppImage
     container_name: $webTaxcoAppContainer
+    depends_on:
+      - webTaxcoEureka
     ports:
       - '8090:8090'
     networks:
@@ -77,20 +79,32 @@ services:
       dockerfile: Dockerfile
     image: $webTaxcoEmailImage
     container_name: $webTaxcoEmailContainer
+    depends_on:
+      - webTaxcoEureka
     ports:
       - '8092:8092'
     networks:
       - web_authe
-  web-front:
+  webTaxcoEureka:
     build:
-      context: $webTaxcoFrontContext
+      context: $webTaxcoEurekaContext
       dockerfile: Dockerfile
-      args: [ "HOST_URL=http://187.227.238.91:8099"]
-    image: $webTaxcoFrontImage
-    environment:
-      host: $host
-    container_name: web-front
+    image: $webTaxcoEurekaImage
+    container_name: $webTaxcoEurekaContainer
     ports:
-      - '4300:80'
+      - '8761:8761'
+    networks:
+      - web_authe
+#  web-front:
+#    build:
+#      context: $webTaxcoFrontContext
+#      dockerfile: Dockerfile
+#      args: [ "HOST_URL=http://187.227.238.91:8099"]
+#    image: $webTaxcoFrontImage
+#    environment:
+#      host: $host
+#    container_name: web-front
+#    ports:
+#      - '4300:80'
 networks:
   web_authe:
