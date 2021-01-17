@@ -39,7 +39,9 @@ services:
     image: $webAuthenticationImage
     container_name: $webAuthenticationContainer
     ports:
-      - '8091:8091'
+      - '7091:7091'
+    environment:
+      SERVER_PORT: $webAuthenticationPort
     networks:
       - web_authe
   databaseMongo:
@@ -60,7 +62,11 @@ services:
     depends_on:
       - webTaxcoEureka
     ports:
-      - '8090:8090'
+      - '7090:7090'
+    environment:
+      SERVER_PORT: $webTaxcoAppPort
+      SERVER_PORT_TAXCO_EMAIL: $webTaxcoEmailPort
+      SERVER_PORT_WEB_AUTHE: $webAuthenticationPort
     networks:
       - web_authe
   webGateway:
@@ -70,7 +76,11 @@ services:
     image: $webGatewayImage
     container_name: $webGatewayContainer
     ports:
-      - '8099:8099'
+      - '7099:7099'
+    environment:
+      SERVER_PORT: $webGatewayPort
+      SERVER_PORT_TAXCO_APP: $webTaxcoAppPort
+      SERVER_PORT_WEB_AUTHE: $webAuthenticationPort
     networks:
       - web_authe
   webTaxcoEmail:
@@ -82,7 +92,9 @@ services:
     depends_on:
       - webTaxcoEureka
     ports:
-      - '8092:8092'
+      - '7092:7092'
+    environment:
+      SERVER_PORT: $webTaxcoEmailPort
     networks:
       - web_authe
   webTaxcoEureka:
