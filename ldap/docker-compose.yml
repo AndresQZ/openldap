@@ -42,6 +42,8 @@ services:
       - '7091:7091'
     environment:
       SERVER_PORT: $webAuthenticationPort
+      SERVER_PORT_TAXCO_EMAIL: $webTaxcoEmailPort
+      MONGO_DB_URI: $mongoDbUri
     networks:
       - web_authe
   databaseMongo:
@@ -67,6 +69,10 @@ services:
       SERVER_PORT: $webTaxcoAppPort
       SERVER_PORT_TAXCO_EMAIL: $webTaxcoEmailPort
       SERVER_PORT_WEB_AUTHE: $webAuthenticationPort
+      MONGO_DB_URI: $mongoDbUri
+      AWS_SECRET_KEY: $awsSecretKey
+      AWS_ACCESS_KEY: $awsAccessKey
+      AWS_BUCKET_NAME: $awsBucketName
     networks:
       - web_authe
   webGateway:
@@ -95,6 +101,8 @@ services:
       - '7092:7092'
     environment:
       SERVER_PORT: $webTaxcoEmailPort
+      EMAIL_SENDER: $emailSender
+      EMAIL_PASSWORD: $emailPassword
     networks:
       - web_authe
   webTaxcoEureka:
