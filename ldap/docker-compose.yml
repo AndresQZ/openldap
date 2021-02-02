@@ -15,7 +15,7 @@ services:
 #      LDAP_BASE_DN: dc=shihadeh,dc=intern
 #      KEEP_EXISTING_CONFIG: "false"
 #      LDAP_REMOVE_CONFIG_AFTER_SETUP: "false"
-  openldap:
+openldap:
     image: osixia/openldap
     container_name: openldap_web
     command: --copy-service --loglevel debug
@@ -39,7 +39,7 @@ services:
     image: $webAuthenticationImage
     container_name: $webAuthenticationContainer
     ports:
-      - '7091:7091'
+      - '8091:8091'
     environment:
       SERVER_PORT: $webAuthenticationPort
       SERVER_PORT_TAXCO_EMAIL: $webTaxcoEmailPort
@@ -61,10 +61,8 @@ services:
       dockerfile: Dockerfile
     image: $webTaxcoAppImage
     container_name: $webTaxcoAppContainer
-    depends_on:
-      - webTaxcoEureka
     ports:
-      - '7090:7090'
+      - '8090:8090'
     environment:
       SERVER_PORT: $webTaxcoAppPort
       SERVER_PORT_TAXCO_EMAIL: $webTaxcoEmailPort
@@ -95,26 +93,42 @@ services:
       dockerfile: Dockerfile
     image: $webTaxcoEmailImage
     container_name: $webTaxcoEmailContainer
-    depends_on:
-      - webTaxcoEureka
     ports:
-      - '7092:7092'
+      - '8092:8092'
     environment:
       SERVER_PORT: $webTaxcoEmailPort
       EMAIL_SENDER: $emailSender
       EMAIL_PASSWORD: $emailPassword
+      spring.cloud.bootstrap.enabled: "true"
+    depends_on:
+      - webTaxcoConfig
+      - webTaxcoEureka
+    command: "echo ls -all"
+    command: ["./wait-for-it.sh", "webTaxcoConfig:8093 -t 60", "--","java","-cp","app:app/lib/*","app.taxco.email.WebTaxcoEmailApplication"]
     networks:
       - web_authe
-  webTaxcoEureka:
+  webTaxcoConfig:
     build:
-      context: $webTaxcoEurekaContext
+      context: $webTaxcoConfigContext
       dockerfile: Dockerfile
+    image: $webTaxcoConfigImage
+    container_name: $webTaxcoConfigContainer
+    ports:
+     - '8093:8093'
+    environment:
+      SERVER_PORT: $webTaxcoConfigPort
+    networks:
+     - web_authe
+  webTaxcoEureka:
+    #build:
+    #  context: $webTaxcoEurekaContext
+    #  dockerfile: Dockerfile
     image: $webTaxcoEurekaImage
     container_name: $webTaxcoEurekaContainer
     ports:
-      - '8761:8761'
+     - '8761:8761'
     networks:
-      - web_authe
+     - web_authe
 #  web-front:
 #    build:
 #      context: $webTaxcoFrontContext
